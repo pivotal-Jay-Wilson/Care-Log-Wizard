@@ -1,0 +1,13 @@
+<!-- <mat-toolbar>
+  <span class = "gap">File</span>
+  <span>Edit</span>
+  <span class = "filler"></span>
+  <span>About</span>
+</mat-toolbar> -->
+<mat-spinner *ngIf="running" class="center" ></mat-spinner>
+<ag-grid-angular style="width: 100%; height: 100%;"
+ class="ag-theme-material"
+ [gridOptions]="gridOptions"
+  >
+</ag-grid-angular>
+<app-speed-dial-fab (selected)='createFiles($event)'> </app-speed-dial-fab>

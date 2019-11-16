@@ -1,0 +1,23 @@
+.top-container {
+  position: absolute;
+   top: 64px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.example-fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+mat-sidenav-container.m2app-dark {
+  background: black;
+}
+
+.center {
+  display: inline;
+  position: relative;
+  z-index: 1;
+  left: 50%;
+  top: 100px;
+}

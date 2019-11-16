@@ -1,0 +1,17 @@
+<div class="mat-app-background basic-container">
+<mat-card class="example-card">
+  <mat-card-header>
+    <div mat-card-avatar class="header-image" [ngStyle]="{'background-image': 'url(' + imageurl + ')'}"></div>
+    <mat-card-title>Carelog Automation Tool</mat-card-title>
+    <mat-card-subtitle>Pivotal DSE</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p *ngIf="!loggedin">
+      You are not logged in.
+    </p>
+    <p *ngIf="loggedin">
+      Welcome {{name}}!!
+    </p>
+  </mat-card-content>
+</mat-card>
+</div>

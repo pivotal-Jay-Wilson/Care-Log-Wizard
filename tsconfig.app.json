@@ -2,7 +2,13 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types": [
+      "gapi",
+      "gapi.auth2"
+    ],
   },
   "include": [
     "src/**/*.ts"

@@ -1,1 +1,121 @@
-/* You can add global styles to this file, and also import other style files */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+@import "../node_modules/ag-grid-community/src/styles/ag-grid.scss";
+@import "../node_modules/ag-grid-community/src/styles/ag-theme-material/sass/ag-theme-material.scss";
+@import '../node_modules/@angular/material/theming';
+
+$pivotal-mint: (
+  50: #e0f6f4,
+  100: #b3e9e3,
+  200: #80dad1,
+  300: #4dcbbf,
+  400: #26c0b1,
+  500: #00b5a3,
+  600: #00ae9b,
+  700: #00a591,
+  800: #009d88,
+  900: #008d77,
+  A100: #b9fff2,
+  A200: #86ffe8,
+  A400: #53ffdf,
+  A700: #3affda,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $light-primary-text,
+    400: $light-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $light-primary-text,
+    A400: $light-primary-text,
+    A700: $light-primary-text,
+  )
+);
+$smoke-white:(
+  50 : #e0e0e0,
+  100 : #b3b3b3,
+  200 : #808080,
+  300 : #4d4d4d,
+  400 : #262626,
+  500 : #000000,
+  600 : #000000,
+  700 : #000000,
+  800 : #000000,
+  900 : #000000,
+  A100 : #a6a6a6,
+  A200 : #8c8c8c,
+  A400 : #737373,
+  A700 : #666666,
+  contrast: (
+      50 : #000000,
+      100 : #000000,
+      200 : #000000,
+      300 : #ffffff,
+      400 : #ffffff,
+      500 : #ffffff,
+      600 : #ffffff,
+      700 : #ffffff,
+      800 : #ffffff,
+      900 : #ffffff,
+      A100 : #000000,
+      A200 : #000000,
+      A400 : #ffffff,
+      A700 : #ffffff,
+  )
+);
+
+
+@include mat-core();
+
+$custom-theme-primary: mat-palette($pivotal-mint);
+$custom-theme-accent: mat-palette($smoke-white);
+$custom-theme-warn: mat-palette($mat-red);
+
+$custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
+
+@include angular-material-theme($custom-theme);
+
+.basic-container {
+  padding: 30px;
+}
+
+// $pivotal-mint: #00b5a3;
+// $white: #ffffff;
+// $light-smoke-white: #F9F9F9;
+// $smoke-white: #ececec;
+// $pivotal-teal: #008774;
+// $navy: #00253e;
+// $light-mustard: #f7dc5f;
+// $danger: red;
+// $muted: #9b9b9b;
+
+// $pivotal-bg-color: $pivotal-mint;
+// $pivotal-fg-color: $white;
+
+// $body-bg: $light-smoke-white;
+
+// $tag-bg-color: $smoke-white;
+// $tag-inactive-color: $muted;
+// $tag-draft-active-color: #f5a623;
+// $tag-draft-invalid-bg-color: $danger;
+// $tag-draft-inactive-bg-color: #fdf7da;
+
+// $inactive-filter-bg-color: $white;
+// $filter-border-color: $muted;
+
+// $method-card-top-border-color: $light-mustard;
+// $tips-bg-color: #f9f4db;
+
+// $small-print-color: #406377;
+
+// $timeline-color: #D9F3EF;
+
+// $highlight-color: $light-mustard;
+
+

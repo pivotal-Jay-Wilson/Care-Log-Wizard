@@ -85,37 +85,8 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   padding: 30px;
 }
 
-// $pivotal-mint: #00b5a3;
-// $white: #ffffff;
-// $light-smoke-white: #F9F9F9;
-// $smoke-white: #ececec;
-// $pivotal-teal: #008774;
-// $navy: #00253e;
-// $light-mustard: #f7dc5f;
-// $danger: red;
-// $muted: #9b9b9b;
-
-// $pivotal-bg-color: $pivotal-mint;
-// $pivotal-fg-color: $white;
-
-// $body-bg: $light-smoke-white;
-
-// $tag-bg-color: $smoke-white;
-// $tag-inactive-color: $muted;
-// $tag-draft-active-color: #f5a623;
-// $tag-draft-invalid-bg-color: $danger;
-// $tag-draft-inactive-bg-color: #fdf7da;
-
-// $inactive-filter-bg-color: $white;
-// $filter-border-color: $muted;
-
-// $method-card-top-border-color: $light-mustard;
-// $tips-bg-color: #f9f4db;
-
-// $small-print-color: #406377;
-
-// $timeline-color: #D9F3EF;
-
-// $highlight-color: $light-mustard;
-
-
+.spinner {
+  position: absolute !important;
+  left: 50%;
+  top: 30%;
+}

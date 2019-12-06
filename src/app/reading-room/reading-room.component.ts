@@ -7,6 +7,9 @@ import { ReadingRoomLink } from '../reading-room-link';
 import { MatCheckboxComponent } from '../grid/mat-checkbox.component';
 import { GridOptions } from 'ag-grid-community';
 import * as jsPDF from 'jspdf';
+import * as moment from 'moment';
+import { Base64 } from 'js-base64';
+import * as mimemessage from 'mimemessage';
 
 @Component({
   selector: 'app-reading-room',
@@ -15,7 +18,6 @@ import * as jsPDF from 'jspdf';
 })
 export class ReadingRoomComponent implements OnInit {
   opened: boolean;
-  isDarkTheme = false;
   ctx: GapiSession;
   cves: CveService;
   rowData: ReadingRoomLink[];
@@ -72,8 +74,8 @@ export class ReadingRoomComponent implements OnInit {
       case 'picture_as_pdf':
          this.createPDF();
          break;
-      case 'picture_as_pdf':
-        console.log('TODO');
+      case 'email':
+        this.createMail();
         break;
     }
   }
@@ -100,28 +102,50 @@ export class ReadingRoomComponent implements OnInit {
           switch (node.data.categoryId) {
             case 'Articles and Blog Posts':
               bulletsArticlesList += '\n\t' + node.data.title;
-              this.addTOSet(bulletsArticlesPosition, node.data.title, node.data.url);
+              this.addToSet(bulletsArticlesPosition, node.data.title, node.data.url);
               break;
             case 'Webinars and Events':
               bulletsWebinarsList += '\n\t' + node.data.title;
-              this.addTOSet(bulletsWebinarsPosition, node.data.title, node.data.url);
+              this.addToSet(bulletsWebinarsPosition, node.data.title, node.data.url);
               break;
             }
         }
       });
       const requests = [];
+      requests.push({replaceAllText: {
+        containsText: {text: '{{dsename}}'},
+        replaceText: 'Jay Wilson'
+      }});
+      requests.push({replaceAllText: {
+        containsText: {text: '{{Renewal}}'},
+        replaceText: 'June 1 2020'
+      }});
+      requests.push({replaceAllText: {
+        containsText: {text: '{{now}}'},
+        replaceText: moment().format('MMMM Do YYYY'),
+      }});
+
       requests.push({
         insertText: {
           objectId: 'g39e41a8dc1_1_5',
           text: `Articles and Blog Posts${bulletsArticlesList}\nWebinars and Events${bulletsWebinarsList}`,
         },
       });
-      let lastend = 'Articles and Blog Posts'.length + 2;
-      let firstend = 0;
+      const head1len = 'Articles and Blog Posts'.length + 2;
+      let sec1endlen = 0;
+      // bold and increase font for heading
+      requests.push({
+        updateTextStyle: {
+          objectId: 'g39e41a8dc1_1_5',
+          style: {bold: true, fontSize: {magnitude: 16, unit: 'PT'}},
+          textRange: { type: 'FIXED_RANGE', startIndex:  0, endIndex: head1len  },
+          fields: 'fontSize, bold',
+        }});
+      //  add links to section 1
       for (const node of bulletsArticlesPosition) {
-        node.textRange.startIndex += lastend;
-        node.textRange.endIndex += lastend;
-        firstend = node.textRange.endIndex;
+        node.textRange.startIndex += head1len;
+        node.textRange.endIndex += head1len;
+        sec1endlen = node.textRange.endIndex;
         requests.push({
           updateTextStyle: {
             objectId: 'g39e41a8dc1_1_5',
@@ -131,23 +155,39 @@ export class ReadingRoomComponent implements OnInit {
           }
         });
       }
-      const endIndex = firstend;
-      firstend += '\nWebinars and Events'.length + 2;
+
+      let sec2endlen = 0;
+      const head2len = sec1endlen + 'Webinars and Events'.length + 2;
+      requests.push({
+        updateTextStyle: {
+          objectId: 'g39e41a8dc1_1_5',
+          style: {bold: true, fontSize: {magnitude: 16, unit: 'PT'}},
+          textRange: { type: 'FIXED_RANGE', startIndex:  sec1endlen, endIndex: head2len  },
+          fields: 'fontSize, bold',
+        }});
       for (const node of bulletsWebinarsPosition) {
-        node.textRange.startIndex += firstend;
-        node.textRange.endIndex += firstend;
+        node.textRange.startIndex +=  head2len;
+        node.textRange.endIndex +=  head2len;
+        sec2endlen = node.textRange.endIndex;
         requests.push({updateTextStyle: {
            objectId: 'g39e41a8dc1_1_5',
            style: node.style,
            textRange: node.textRange,
-           fields: 'link',
+           fields: 'link, foregroundColor',
            }
          });
+        console.log(node.textRange);
+        console.log(sec2endlen);
       }
 
       requests.push({createParagraphBullets: {
         objectId: 'g39e41a8dc1_1_5',
-        textRange: { type: 'FIXED_RANGE', startIndex: lastend, endIndex  },
+        textRange: { type: 'FIXED_RANGE', startIndex:  head2len, endIndex: sec2endlen  },
+       }});
+
+      requests.push({createParagraphBullets: {
+        objectId: 'g39e41a8dc1_1_5',
+        textRange: { type: 'FIXED_RANGE', startIndex:  head1len, endIndex: sec1endlen  },
        }});
 
       const response1 = await this.ctx.gapi.client.slides.presentations.batchUpdate({ presentationId, requests });
@@ -159,7 +199,7 @@ export class ReadingRoomComponent implements OnInit {
     this.running = false;
   }
 
-  addTOSet(set: Set<bp>, name: string, url ) {
+  addToSet(set: Set<bp>, name: string, url ) {
     const lastValue: any = Array.from(set).pop();
     let startIndex  = 0;
     if (lastValue) {
@@ -205,6 +245,74 @@ export class ReadingRoomComponent implements OnInit {
       textY += 10;
     });
     doc.save('CareLog.pdf');
+  }
+
+  async createMail() {
+    this.running = true;
+    // Build the top-level multipart MIME message.
+    const msg = mimemessage.factory({
+        contentType: 'multipart/mixed',
+        body: []
+    });
+    msg.header('Message-ID', '<1234qwerty>');
+
+    // Build the multipart/alternate MIME entity containing both the HTML and plain text entities.
+    const alternateEntity = mimemessage.factory({
+        contentType: 'multipart/alternate',
+        body: []
+    });
+    let bulletsArticlesList = '<H3>Articles and Blog Posts</H3><ol>';
+    let bulletsWebinarsList = '<H3>Webinars and Events</H3><ol>';
+    this.gridApi.forEachNode((node, index) => {
+      if (node.data.select) {
+        switch (node.data.categoryId) {
+          case 'Articles and Blog Posts':
+            bulletsArticlesList += `<li><a href='${node.data.url}'>${node.data.title}</a></li>`;
+            break;
+          case 'Webinars and Events':
+            bulletsWebinarsList += `<li><a href='${node.data.url}'>${node.data.title}</a></li>`;
+            break;
+          }
+      }
+    });
+    bulletsArticlesList += '</ol>';
+    bulletsWebinarsList += '</ol>';
+
+    // Build the HTML MIME entity.
+    const htmlEntity = mimemessage.factory({
+        contentType: 'text/html;charset=utf-8',
+        body: '<H1>CareLog Reading Room</H1><hr><H2>Reading Room</H2>' + bulletsArticlesList + bulletsWebinarsList,
+    });
+
+
+
+    // Add both the HTML and plain text entities to the multipart/alternate entity.
+    alternateEntity.body.push(htmlEntity);
+
+    // Add the multipart/alternate entity to the top-level MIME message.
+    msg.body.push(alternateEntity);
+
+
+    try {
+      const base64EncodedEmail = Base64.encodeURI(msg.toString());
+      const request = await this.ctx.gapi.client.gmail.users.drafts.create({
+        userId: 'jwilson@pivotal.io',
+        resource: {
+          message: {
+            raw: base64EncodedEmail
+          }
+        }
+      });
+      console.log(request);
+    } catch (error) {
+      console.error(error);
+    }
+    this.running = false;
+  }
+
+
+  onResize(event) {
+    this.gridApi.sizeColumnsToFit();
   }
 }
 

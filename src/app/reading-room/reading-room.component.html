@@ -4,10 +4,11 @@
   <span class = "filler"></span>
   <span>About</span>
 </mat-toolbar> -->
-<mat-spinner *ngIf="running" class="center" ></mat-spinner>
+<mat-spinner *ngIf="running" class="spinner"></mat-spinner>
 <ag-grid-angular style="width: 100%; height: 100%;"
  class="ag-theme-material"
  [gridOptions]="gridOptions"
+ (window:resize)="onResize($event)"
   >
 </ag-grid-angular>
 <app-speed-dial-fab (selected)='createFiles($event)'> </app-speed-dial-fab>

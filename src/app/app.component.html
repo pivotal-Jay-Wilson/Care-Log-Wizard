@@ -7,10 +7,13 @@
   <!-- <button *ngIf="ctx.isSignedIn" mat-button class="app-menu-button" (click)="createSlides()">
     <mat-icon class="material-icon">slideshow</mat-icon>
   </button> -->
-  <button *ngIf="!ctx.isSignedIn" mat-button class="app-menu-button" (click)="signIn()">
+  <button *ngIf="!appContext.isSignedIn && isLoggingIn === 'default'" mat-button class="app-menu-button" (click)="signIn()">
     <mat-icon class="material-icon">account_circle</mat-icon>
   </button>
-  <button *ngIf="ctx.isSignedIn" mat-button class="app-menu-button" (click)="signOut()">
+  <button *ngIf="isLoggingIn !== 'default'" mat-button class="app-menu-button">
+    <mat-icon class="material-icon" [@rotatedState]='isLoggingIn' (@rotatedState.done)="onEnd($event)">hourglass_empty</mat-icon>
+  </button>
+  <button *ngIf="appContext.isSignedIn && isLoggingIn === 'default'" mat-button class="app-menu-button" (click)="signOut()">
     <mat-icon class="material-icon">verified_user</mat-icon>
   </button>
 </mat-toolbar>

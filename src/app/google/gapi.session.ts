@@ -31,6 +31,7 @@ export class GapiSession {
         });
 
     }
+
     get isSignedIn(): boolean {
       // console.log(this.googleAuth);
       return this.googleAuth.isSignedIn.get();
@@ -40,14 +41,8 @@ export class GapiSession {
       this.googleAuth.isSignedIn.listen(cb);
     }
 
-    signIn() {
-        return this.googleAuth.signIn({
-            prompt: 'consent'
-        }).then((googleUser: any) => {
-            // console.log(this.isSignedIn);
-            this.googleUser = googleUser;
-            console.log(googleUser);
-        });
+    async signIn() {
+      this.googleUser =  await this.googleAuth.signIn({ prompt: 'consent'});
     }
 
     signOut(): void {

@@ -10,9 +10,11 @@ The chrome plugin is used to add article and blogs to the reading room database.
 
 
 ![install plugin](images/installplugin.png)
+
 2.  Click the add to chrome button
 
 ![new icon](images/new_icon.png)
+
 3. A new icon will be added to the upper left hand coner of your bowser
 
 ### Plugin Usage

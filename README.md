@@ -1,6 +1,6 @@
 # CareLog Aggregator
 
-This is an attempt to create an app and plug in to aggregate and output data for DSE Carelogs.
+This is an attempt to create an app and plugin to aggregate and output data for DSE Carelogs.
 
 ## Installation
 ### Chrome Plugin 
@@ -35,14 +35,14 @@ The chrome plugin is used to add article and blogs to the reading room database.
 
 ![save_link](images/save_link.png)
 
-6. The save form will appear. all iformation should be filled in. Select catagory that you want the article to appear and select save.
+6. The save form will appear. All information should be pre-filled in. Select catagory that you want the article to appear and select save.
 
 ### Care log
 7. Go to the  [Care Log Wizard](https://carelogwizzard.apps.pcfone.io/home)
 
 ![login Wizard](images/login_Wizard.png)
 
-8. Click the log in icon to login to google
+8. Click the log in icon to login to google.
 
 ![google login](images/google_login.png)
 

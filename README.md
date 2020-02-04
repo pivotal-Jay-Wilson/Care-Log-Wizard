@@ -75,3 +75,10 @@ The chrome plugin is used to add article and blogs to the reading room database.
 ![draft](images/create_mail.png)
 17. A draft email will be created
 
+
+# Todo
+- [ ] add CV's
+- [ ] improve security
+- [ ] modify work flow
+- [ ] add abbility to approve article
+- [ ] pull from salesforce

@@ -1,27 +1,77 @@
-# GsheetEditor
+# CareLog Aggregator
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.1.2.
+This is an attempt to create an app and plug in to aggregate and output data for DSE Carelogs.
 
-## Development server
+## Installation
+### Chrome Plugin 
+The chrome plugin is used to add article and blogs to the reading room database.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+1. Go to the [Pivotal DSE Reading Room](https://chrome.google.com/webstore/detail/pivotal-dse-reading-room/adnibniobfbbpjpcdjabmhkoeealagdb) install page 
+2.  Clcik the add to chrome button
+![install plugin](images/installplugin.png)
+3. A new icon will be added to the upper left hand coner of your bowser
+![new icon](images/new_icon.png)
 
-## Code scaffolding
+### Plugin Usage
+4. Visit one of the following sites to find an article:
+ - pivotal.io/blog
+ - blogs.vmware.com
+ - content.pivotal.io
+ - pivotal.io/security
+ - djavos.cfapps.io
+ - starkandwayne.com/blog
+ - www.brighttalk.com
+ - engineering.pivotal.io
+ - thenewstack.io
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+![show plugin](images/show_plugin.png)
+5. The icon should turn green. Select the icon. 
 
-## Build
+![save_link](images/save_link.png)
+6. The save form will appear. all iformation should be filled in. Select catagory that you want the article to appear iand selec save.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+### Care log
+7. Go to the  [Care Log Wizard](https://carelogwizzard.apps.pcfone.io/home)
 
-## Running unit tests
+![login Wizard](images/login_Wizard.png)
+8. Click the log in icon to login to google
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+![google login](images/google_login.png)
+9. Log in to your pivotal account.
 
-## Running end-to-end tests
+![app isn't verified](images/app_isn't_verified.png)
+10. Click the go to pcfone for now. This should go away when he app gets verified.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+![click reading room](images/click_reading_room.png)
+11. Click the hamburger menu and then select reading room.  
 
-## Further help
+![select articles](images/select_article.png)
+12. Select the articles you want in you reading room. 
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### Export Slides
+
+![select output format](images/select_output_format.png)
+13. In the bottom right hand corner click the plus fob to show the output options. Select slides icon to generate slides.
+
+![open new carelog](images/open_new_carelog.png)
+14. Open the [Carelog Folder](https://drive.google.com/open?id=1I6pYZjZM5AspBktdfjNH2GJ6309uOpda)
+
+![slides](images/slides.png)
+15. On the second slide you should see the article you selected
+
+### Export to PDF
+
+![exportpdf](images/export_pdf.png)
+16. Click on the export pdf icon
+ 
+![pdf](images/save_as_pdf.png)
+17. A pdf will be created
+
+
+### Export to Draft E-mail
+![exportmail](images/export_mail.png)
+16. Click on the export pdf icon
+ 
+![draft](images/create_mail.png)
+17. A draft email will be created
+

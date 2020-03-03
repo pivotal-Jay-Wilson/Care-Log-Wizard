@@ -6,7 +6,7 @@ const API_KEY = 'AIzaSyBs5fZvtYCPx8qlmzAuC54lE_sP720NPNU';
 const DISCOVERY_DOCS = ['https://slides.googleapis.com/$discovery/rest?version=v1',
                        'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
                       'https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest'];
-const SCOPES = 'https://www.googleapis.com/auth/presentations.readonly https://www.googleapis.com/auth/drive.metadata.readonly https://www.googleapis.com/auth/gmail.compose';
+const SCOPES = 'https://www.googleapis.com/auth/presentations https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/gmail.compose';
 
 
 @Injectable()
@@ -24,6 +24,7 @@ export class GapiSession {
                     scope: SCOPES,
                 }).then(() => {
                     this.googleAuth = gapi.auth2.getAuthInstance();
+                    console.log(this.googleAuth);
                     resolve();
                 });
             });
@@ -43,6 +44,7 @@ export class GapiSession {
 
     async signIn() {
       this.googleUser =  await this.googleAuth.signIn({ prompt: 'consent'});
+      console.log(this.googleAuth);
     }
 
     signOut(): void {

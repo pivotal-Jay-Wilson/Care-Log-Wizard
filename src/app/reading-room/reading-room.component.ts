@@ -20,36 +20,32 @@ export class ReadingRoomComponent implements OnInit {
   opened: boolean;
   ctx: GapiSession;
   cves: CveService;
-  rowData: ReadingRoomLink[];
   running = false;
   private gridApi;
   private gridColumnApi;
   private readingroomService;
   gridOptions: GridOptions;
+  filterWeek: string;
 
   columnDefs = [
     { headerName: 'Select', field: 'select', cellRenderer: 'checkboxRenderer'},
-    { headerName: 'Title', field: 'title', sortable: true, filter: true, resizable: true },
-    { headerName: 'Url', field: 'url', sortable: true, filter: true, resizable: true },
-    { headerName: 'Name', field: 'authorId', sortable: true, filter: true, resizable: true },
-    { headerName: 'Category', field: 'categoryId', sortable: true, filter: true, resizable: true },
-    { headerName: 'Date Saved', field: 'createdAt', sortable: true, filter: true, resizable: true },
+    { headerName: 'Title', field: 'title', sortable: true, filter: false, resizable: true },
+    { headerName: 'Url', field: 'url', sortable: true, filter: false, resizable: true },
+    { headerName: 'Name', field: 'authorId', sortable: true, filter: false, resizable: true },
+    { headerName: 'Category', field: 'categoryId', sortable: true, filter: false, resizable: true },
+    { headerName: 'Date Created', field: 'mediaAt', sortable: true, filter: false, resizable: true, valueFormatter: this.dateFormatter},
   ];
 
 
-  constructor(appContext: GapiSession, cveService: CveService, readingroomService: ReadingroomService) {
+  constructor(appContext: GapiSession, cveService: CveService, readingroomService: ReadingroomService, private snackBar: MatSnackBar) {
     this.ctx = appContext;
     this.cves = cveService;
     this.readingroomService = readingroomService;
     this.gridOptions = {
-      onGridReady: params => {
-        this.gridApi = params.api;
-        this.gridColumnApi = params.columnApi;
-        params.api.sizeColumnsToFit();
-      },
-      rowData: this.rowData,
       columnDefs: this.columnDefs,
       rowHeight: 48, // recommended row height for material design data grids,
+      rowModelType: 'infinite',
+      getRowNodeId: (item: ReadingRoomLink) => {item.id.toString()},
       frameworkComponents: {
         checkboxRenderer: MatCheckboxComponent,
         // inputRenderer: MatInputComponent,
@@ -57,16 +53,52 @@ export class ReadingRoomComponent implements OnInit {
         // selectEditor: MatSelectComponent
       }
     } as GridOptions;
-    this.readingroomService.getRr().subscribe((data: ReadingRoomLink[]) => {
-      this.gridOptions.api.setRowData(data);
-    });
+  }
+
+  dateFormatter(params) {
+    return moment(params.value).format('MM-DD-YYYY');
+  }
+
+  onGridReady(p) {
+    this.gridApi = p.api;
+    this.gridColumnApi = p.columnApi;
+    p.api.sizeColumnsToFit();
+    const dataSource = {
+      rowCount: null,
+      getRows: (params) => {
+        const newParms = {
+          sortModel: params.sortModel,
+          filterModel: params.filterModel,
+          startRow: params.startRow,
+          endRow: params.endRow,
+          filterWeek: this.filterWeek
+        };
+        this.readingroomService.getRrInifin(newParms).subscribe((data: ReadingroomServiceResult) => {
+          params.successCallback(data.links, data.count);
+        });
+      }
+    };
+    p.api.setDatasource(dataSource);
   }
 
   ngOnInit() {
 
   }
 
- createFiles(e) {
+  weekChanged() {
+    console.log(this.filterWeek);
+    this.gridApi.onFilterChanged();
+  }
+
+  isExternalFilterPresent() {
+    return true;
+  }
+  doesExternalFilterPass(node) {
+    console.log(node);
+    return true;
+  }
+
+  createFiles(e) {
     switch (e) {
       case 'slideshow':
         this.createSlides();
@@ -180,20 +212,24 @@ export class ReadingRoomComponent implements OnInit {
         console.log(sec2endlen);
       }
 
-      requests.push({createParagraphBullets: {
-        objectId: 'g39e41a8dc1_1_5',
-        textRange: { type: 'FIXED_RANGE', startIndex:  head2len, endIndex: sec2endlen  },
-       }});
-
-      requests.push({createParagraphBullets: {
-        objectId: 'g39e41a8dc1_1_5',
-        textRange: { type: 'FIXED_RANGE', startIndex:  head1len, endIndex: sec1endlen  },
-       }});
+      if (sec2endlen !== 0) {
+        requests.push({createParagraphBullets: {
+          objectId: 'g39e41a8dc1_1_5',
+          textRange: { type: 'FIXED_RANGE', startIndex:  head2len, endIndex: sec2endlen  },
+         }});
+      }
+      if (sec1endlen !== 0) {
+        requests.push({createParagraphBullets: {
+          objectId: 'g39e41a8dc1_1_5',
+          textRange: { type: 'FIXED_RANGE', startIndex:  head1len, endIndex: sec1endlen  },
+        }});
+      }
 
       const response1 = await this.ctx.gapi.client.slides.presentations.batchUpdate({ presentationId, requests });
       console.log(response1);
-
+      this.snackBar.open('Slide Created', 'Slides');
     } catch (error) {
+      this.snackBar.open('Error Createing slides', 'Slides');
       console.log(error);
     }
     this.running = false;
@@ -211,6 +247,7 @@ export class ReadingRoomComponent implements OnInit {
     );
 
   }
+
   createPDF() {
     const doc = new jsPDF();
     doc.setFont('helvetica');
@@ -304,12 +341,13 @@ export class ReadingRoomComponent implements OnInit {
         }
       });
       console.log(request);
+      this.snackBar.open('Mail Created', 'Mail');
     } catch (error) {
+      this.snackBar.open('Error Creating Mail', 'Mail');
       console.error(error);
     }
     this.running = false;
   }
-
 
   onResize(event) {
     this.gridApi.sizeColumnsToFit();
@@ -326,3 +364,7 @@ interface textRange {
    startIndex: number;
    endIndex: number;
  }
+interface ReadingroomServiceResult {
+  links: ReadingRoomLink[];
+  count: number;
+}

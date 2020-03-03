@@ -1,0 +1,12 @@
+applications:
+- name: carelogwizzard
+  path: dist
+  buildpacks:
+  - staticfile_buildpack
+  disk_quota: 512M
+  health-check-type: http
+  instances: 1
+  memory: 512M
+  routes:
+  - route: dev-carelogwizzard.apps.pcfone.io
+  stack: cflinuxfs3
